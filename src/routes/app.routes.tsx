@@ -2,8 +2,7 @@ import { Platform } from 'react-native'
 import { useTheme } from "native-base";
 import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
-import { Exercise } from "@screens/Exercise";
-import { History } from "@screens/History";
+import { Exercise } from "@screens/LaundryDetails";
 import { Home } from "@screens/Home";
 import { Profile } from "@screens/Profile";
 
@@ -15,7 +14,7 @@ type AppRoutes = {
     home: undefined;
     history: undefined;
     profile: undefined;
-    exercise: {exerciseId: string};
+    exercise: {tokenId: string};
 }
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -46,16 +45,6 @@ export function AppRoutes(){
                 options={{
                     tabBarIcon: ({color}) => (
                         <HomeSvg fill={color} width={iconSize} height={iconSize}/>
-                    ) 
-                }}
-            />
-
-            <Screen 
-                name="history" 
-                component={History}
-                options={{
-                    tabBarIcon: ({color}) => (
-                        <HistorySvg fill={color} width={iconSize} height={iconSize}/>
                     ) 
                 }}
             />

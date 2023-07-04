@@ -59,12 +59,12 @@ export function SignIn() {
     }
     return(
         <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-            <VStack flex={1} px={10} pb={16}>
-                <Image source={BackgroundImg} defaultSource={BackgroundImg} alt='Pessoas treinando' resizeMode='contain' position='absolute' />
+            <VStack flex={1} px={10} pb={16} bg={'gray.400'}>
+                {/* <Image source={BackgroundImg} defaultSource={BackgroundImg} alt='Pessoas treinando' resizeMode='contain' position='absolute' /> */}
                 
                 <Center mt={24} mb={12}>
                     <Image source={LogoHiGroup} w={40} h={40} mb={5} alt='Logo HiGroup'/>
-                    <Text color='gray.100' fontSize={'sm'}>Treine sua mente e o sue corpo</Text>
+                    <Text color='gray.100' fontSize={'sm'}>Lavanderia 60 minutos</Text>
                 </Center>
 
                 <Center>
