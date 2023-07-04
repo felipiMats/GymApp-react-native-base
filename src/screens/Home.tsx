@@ -11,16 +11,21 @@ import { HStack, VStack, FlatList, Heading, Text, useToast, Icon} from 'native-b
 import { useCallback, useEffect, useState } from 'react';
 import { EvilIcons } from '@expo/vector-icons';
 
+type StoreDetailsProp = {
+    loja: string;
+    tokenId: string;
+}
+
 export function Home() {
 
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    const [stores, setStores] = useState(['Lavanderia PB-01', 'Lavanderia PB-02', 'Lavanderia PB-03', 'Lavanderia PB-04', 'Lavanderia PB-05', 'Lavanderia PB-06', 'Lavanderia PB-07', 'Lavanderia PB-08', 'Lavanderia PB-09','Lavanderia PB-10','Lavanderia PB-11', 'Lavanderia PB-12', 'Lavanderia PB-13', 'Lavanderia PB-14', 'Lavanderia PB-15'])
+    const [stores, setStores] = useState([{loja:'PB-01', tokenId: 'e3j8gxkHFe4YcCTsQiPrqPcHDQqbvWXl'}])
     const [isLoading, setIsLoading] = useState(true);
 
-    function handleOpenStoreDetails(tokenId: string) {
-        navigation.navigate('exercise', {tokenId})
+    function handleOpenStoreDetails({loja, tokenId}: StoreDetailsProp) {
+        navigation.navigate('exercise', {loja,tokenId})
     }
 
     const [searchText, setSearchText] = useState('');
@@ -28,7 +33,7 @@ export function Home() {
 
     const handleSearchStore = () => {
         const filtered = stores.filter((store) =>
-        store.toLowerCase().includes(searchText.toLowerCase())
+        store.loja.toLowerCase().includes(searchText.toLowerCase())
         );
         setFilteredStores(filtered);
     };
@@ -40,7 +45,7 @@ export function Home() {
             
         } catch (error) {
             const isAppError = error instanceof AppError;
-            const title = isAppError ? error.message : 'Não foi possível carregar os grupos de exercícios'
+            const title = isAppError ? error.message : 'Não foi possível carregar os grupos de exercícios';
         
             toast.show({
                 title,
@@ -99,9 +104,9 @@ export function Home() {
                 
                 <FlatList 
                     data={filteredStores}
-                    keyExtractor={(item) => item}
+                    keyExtractor={(item) => item.tokenId}
                     renderItem={({item}) => (
-                        <Button mb={4} title={item} onPress={() => handleOpenStoreDetails(item)}/> 
+                        <Button mb={4} title={item.loja} onPress={() => handleOpenStoreDetails(item)}/> 
                     )}
                     showsVerticalScrollIndicator={false}
                 />

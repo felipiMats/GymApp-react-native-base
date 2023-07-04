@@ -14,7 +14,7 @@ type AppRoutes = {
     home: undefined;
     history: undefined;
     profile: undefined;
-    exercise: {tokenId: string};
+    exercise: {loja: string, tokenId: string};
 }
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
