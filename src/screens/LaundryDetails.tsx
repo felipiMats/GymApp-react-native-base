@@ -13,13 +13,15 @@ import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Group } from '@components/Group';
 
 type RoutesParamsProps = {
-    loja: string;
     tokenId: string;
+    name: string;
 }
+
 
 
 export function Exercise() {
     const [isOnlineServer, setIsOlineServer] = useState<boolean>();
+    const [screenOpened, setScreenOpened] = useState(false);
 
     const [newSoftener, setNewSoftener] = useState<string>();
     const [newSoap, setNewSoap] = useState<string>();
@@ -37,18 +39,19 @@ export function Exercise() {
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     function handleGoBack() {
-        navigation.goBack();
+        navigation.navigate('home');
     }
 
+    
+
     const route = useRoute();
-    const {loja, tokenId} = route.params as RoutesParamsProps;
+    const {tokenId, name} = route.params as RoutesParamsProps;
 
     async function fetchLaundryDetails() {
         try {
             setIsLoading(true);
 
             let VS, VA;
-
             switch (machineSelected) {
                 case '432':
                     VS = 'V43';
@@ -63,7 +66,6 @@ export function Exercise() {
                     VA = 'V48';
                     break;
             }
-            
             const timeSoap = await axios.get(`https://blynk.cloud:443/external/api/get?token=${tokenId}&${VS}`);
             const timeSoftener = await axios.get(`https://blynk.cloud:443/external/api/get?token=${tokenId}&${VA}`);
 
@@ -73,12 +75,16 @@ export function Exercise() {
         } catch (error) {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : 'Não foi possível carregar os detalhes da lavanderia';
-        
+            
             toast.show({
                 title,
                 placement: 'top',
                 bgColor: 'red.500'
             })
+
+            setStaticSoap('');
+            setStaticSoftener('');
+
         } finally {
             setIsLoading(false);
         }
@@ -136,12 +142,16 @@ export function Exercise() {
                 placement: 'top',
                 bgColor: 'red.500'
             })
+            setStaticSoap('');
+            setStaticSoftener('');
         } finally {
             setSendingRegister(false);
+            setNewSoap('');
+            setNewSoftener('');
         }
     }
 
-    async function handleOnRele() {
+    async function handleOnReleSoap() {
         try {
             setSendingRegister(true);
 
@@ -163,17 +173,59 @@ export function Exercise() {
             }
 
             await axios.get(`https://blynk.cloud:443/external/api/update?token=${tokenId}&${VS}=1`);
-            await axios.get(`https://blynk.cloud:443/external/api/update?token=${tokenId}&${VA}=1`);
             
             toast.show({
-                title: 'Êxito! Rele ligado.',
+                title: 'Êxito! Rele do sabão ligado.',
                 placement: 'top',
                 bgColor: 'green.500'
             })
 
         } catch (error) {
             const isAppError = error instanceof AppError;
-            const title = isAppError ? error.message : 'Não foi possível ligar o rele.';
+            const title = isAppError ? error.message : 'Não foi possível ligar o rele do sabão.';
+        
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            })
+        } finally {
+            setSendingRegister(false);
+        }
+    }
+
+    async function handleOnReleSoftener() {
+        try {
+            setSendingRegister(true);
+
+            let VS, VA;
+
+            switch (machineSelected) {
+                case '432':
+                    VS = 'V61';
+                    VA = 'V62';
+                    break;
+                case '543':
+                    VS = 'V63';
+                    VA = 'V64';
+                    break;
+                case '654':
+                    VS = 'V65';
+                    VA = 'V66';
+                    break;
+            }
+
+            await axios.get(`https://blynk.cloud:443/external/api/update?token=${tokenId}&${VA}=1`);
+            
+            toast.show({
+                title: 'Êxito! Rele do amaciante ligado.',
+                placement: 'top',
+                bgColor: 'green.500'
+            })
+
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível ligar o rele do amaciante.';
         
             toast.show({
                 title,
@@ -186,15 +238,29 @@ export function Exercise() {
     }
 
     async function onOnlineServer() {
-        const isOnline = await axios.get(`https://blynk.cloud/external/api/isHardwareConnected?token=${tokenId}`);
-        setIsOlineServer(isOnline.data as boolean);
-
+        try {
+            const isOnline = await axios.get(`https://blynk.cloud/external/api/isHardwareConnected?token=${tokenId}`);
+            setIsOlineServer(isOnline.data as boolean);
+        } catch (error) {
+            setIsOlineServer(false);
+        }
     }
 
-    useFocusEffect(useCallback(() => {
-        fetchLaundryDetails();
-        onOnlineServer();
-    }, [staticSoap,staticSoftener, machineSelected ]))
+
+    useFocusEffect(
+        useCallback(() => {
+          if (screenOpened) {
+            fetchLaundryDetails();
+            onOnlineServer();
+          }
+          setScreenOpened(true);
+      
+          return () => {
+            setScreenOpened(false);
+          };
+        }, [screenOpened, machineSelected])
+    );
+
     return(
         <VStack flex={1}>
             <VStack bg={'gray.600'} px={8} pt={12}>
@@ -203,12 +269,12 @@ export function Exercise() {
                 </TouchableOpacity>
                 
                 <HStack justifyContent={'space-between'} mt={4} mb={8} alignItems={'center'} flexShrink={1}>
-                    <Heading fontFamily={"heading"} color={'gray.100'} fontSize={'lg'}>{loja}</Heading>
+                    <Heading fontFamily={"heading"} color={'gray.100'} fontSize={'lg'}>Lavanderia</Heading>
 
                     <HStack alignItems={'center'}>
                         { isOnlineServer ? <Box bg={'green.700'} size={5} rounded={'full'} /> : <Box bg={'red.700'} size={5} rounded={'full'}/>}
                         <Icon as={MaterialIcons} name='local-laundry-service' size={6} ml={4}/>
-                        <Text color={'gray.200'} ml={1} textTransform={'capitalize'}>Intermares</Text>
+                        <Text color={'gray.200'} ml={1}>{name}</Text>
                     </HStack>
                 </HStack>
             </VStack>
@@ -252,18 +318,19 @@ export function Exercise() {
                             <HStack justifyContent={'space-between'} mt={5}>
                                 <VStack mt={5} width={'45%'}>
                                     <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Sabão</Heading>
-                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} onChangeText={setNewSoap}/>
+                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} value={newSoap} onChangeText={setNewSoap}/>
+                                    <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoap}/>
                                 </VStack>
 
                                 <VStack mt={5} width={'45%'}>
                                     <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Amaciante</Heading>
-                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} onChangeText={setNewSoftener}/>
+                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} value={newSoftener} onChangeText={setNewSoftener}/>
+                                    <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoftener}/>
                                 </VStack>
 
                             </HStack>
                             
-                            <Button title='Realizar alteração' isLoading={sendingRegister} mt={4} onPress={handleNewTimer}/>
-                            <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnRele}/>
+                            <Button title='Alterar temporizador' isLoading={sendingRegister} mt={4} onPress={handleNewTimer}/>
                         </Box>
                     
                     </VStack>

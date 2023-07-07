@@ -7,12 +7,14 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
-import { HStack, VStack, FlatList, Heading, Text, useToast, Icon} from 'native-base';
+import { HStack, VStack, FlatList, Heading, Text, useToast, Icon, Center} from 'native-base';
 import { useCallback, useEffect, useState } from 'react';
-import { EvilIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
+import { Camera, CameraType } from 'expo-camera';
 
 type StoreDetailsProp = {
-    loja: string;
+    name: string;
     tokenId: string;
 }
 
@@ -21,21 +23,28 @@ export function Home() {
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    const [stores, setStores] = useState([{loja:'PB-01', tokenId: 'e3j8gxkHFe4YcCTsQiPrqPcHDQqbvWXl'}])
     const [isLoading, setIsLoading] = useState(true);
-
-    function handleOpenStoreDetails({loja, tokenId}: StoreDetailsProp) {
-        navigation.navigate('exercise', {loja,tokenId})
+    
+    const [searchToken, setSearchToken] = useState('');
+    const [showCamera, setShowCamera] = useState(false);
+    
+    function handleOpenStoreDetails(nameAndToken: StoreDetailsProp) {
+        navigation.navigate('exercise', nameAndToken)
+        setShowCamera(false);
     }
 
-    const [searchText, setSearchText] = useState('');
-    const [filteredStores, setFilteredStores] = useState(stores);
+    const handleBarCodeScanned = ({ data }: {data:string}) => {
+        const nameAndToken = JSON.parse(data)
+        nameAndToken.name = nameAndToken.name.toUpperCase();
+        console.log(nameAndToken.name);
+        setSearchToken(nameAndToken.tokenId);
+        handleOpenStoreDetails(nameAndToken);
+    };
 
-    const handleSearchStore = () => {
-        const filtered = stores.filter((store) =>
-        store.loja.toLowerCase().includes(searchText.toLowerCase())
-        );
-        setFilteredStores(filtered);
+    const handleNameToken = (searchToken : string) => {
+        const nameAndToken = {name: "LOJA", tokenId: searchToken}
+        setSearchToken(searchToken);
+        handleOpenStoreDetails(nameAndToken);
     };
 
     async function fetchStores() {
@@ -58,33 +67,20 @@ export function Home() {
     
     }
 
-    // async function fetchExercisesByGroup() {
-    //     try {
-    //         setIsLoading(true);
-
-    //         const response = await api.get(`/exercises/bygroup/${groupSelected}`);
-    //         setExercises(response.data);
-    //     } catch (error) {
-    //         const isAppError = error instanceof AppError;
-    //         const title = isAppError ? error.message : 'Não foi possível carregar os exercícios'
+    const openCamera = () => {
+        try {
+            setShowCamera(true);
+            
+        } catch (error) {
+            
+        }
         
-    //         toast.show({
-    //             title,
-    //             placement: 'top',
-    //             bgColor: 'red.500'
-    //         })
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }
+    };
+
 
     useEffect(() => {
         fetchStores();
     },[])
-
-    // useFocusEffect(useCallback(() => {
-    //     fetchExercisesByGroup();
-    // }, [groupSelected]))
 
     return(
         <VStack flex={1}>
@@ -95,21 +91,37 @@ export function Home() {
             isLoading ? <Loading /> :
             <VStack flex={1} px={8}>
 
-                <HStack mt={10} h={16} >
-                    <Input placeholder='Buscar loja' bgColor={'black'} width={'90%'} h={14} value={searchText} onChangeText={(text) => setSearchText(text)}/>
-                    <Button w={20} ml={-20} h={14} alignItems={'center'} justifyContent={'center'} onPress={handleSearchStore}>
-                        <Icon as={EvilIcons} name='search' color={'white'} size={10} mt={2} mb={5}/>
-                    </Button>
-                </HStack>
-                
-                <FlatList 
-                    data={filteredStores}
-                    keyExtractor={(item) => item.tokenId}
-                    renderItem={({item}) => (
-                        <Button mb={4} title={item.loja} onPress={() => handleOpenStoreDetails(item)}/> 
-                    )}
-                    showsVerticalScrollIndicator={false}
-                />
+                <Center flex={1}>
+                    <HStack mt={10} h={16} >
+                        <Input placeholder='Informe o Token da loja' bgColor={'black'} width={'77%'} h={14} onChangeText={(text) => setSearchToken(text)}/>
+                        <Button flex={1} ml={-20} h={14} alignItems={'center'} justifyContent={'center'} onPress={() => handleNameToken(searchToken)}>
+                            <Icon as={AntDesign} name='arrowright' color={'white'} size={8} mt={1} mb={5}/>
+                        </Button>
+                    </HStack>
+
+                    <HStack w={'100%'} alignItems={'center'} justifyContent={'space-between'} mt={10}>
+                        <Icon as={MaterialIcons} name='qr-code-scanner' color={'white'} size={32} mt={2} mb={5} ml={10}/>
+                       
+                        <VStack alignItems={'center'} mr={10}>
+                            <TouchableOpacity onPress={openCamera}>
+                                <Icon as={FontAwesome5} name='camera' color={'white'} size={8} mt={2} mb={5}/>
+                            </TouchableOpacity>
+                            
+                            <Text textAlign={'center'} fontSize={14} color={'gray.200'}>Escaneie o Token{'\n'}na máquina</Text>
+                        </VStack>
+
+                    </HStack>
+
+                </Center>
+
+                {showCamera && (
+                        <Camera
+                            style={{ flex: 1, marginBottom: 20 }}
+                            type={CameraType.back}
+                            onBarCodeScanned={handleBarCodeScanned}
+                        />
+                    )
+                }
                
             </VStack>
             }
