@@ -6,7 +6,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import {AuthNavigatorRoutesProps} from '@routes/auth.routes'
-import LogoHiGroup from '@assets/GRUPO_HI_LOGO_VETOR_Prancheta_1.png';
+import LogoIkli from '@assets/ikli_logo.png';
 import BackgroundImg from '@assets/background.png';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
@@ -59,16 +59,16 @@ export function SignIn() {
     }
     return(
         <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-            <VStack flex={1} px={10} pb={16} bg={'gray.400'}>
+            <VStack flex={1} px={10} pb={16} bg={'colorRp.light'}>
                 {/* <Image source={BackgroundImg} defaultSource={BackgroundImg} alt='Pessoas treinando' resizeMode='contain' position='absolute' /> */}
                 
                 <Center mt={24} mb={12}>
-                    <Image source={LogoHiGroup} w={40} h={40} mb={5} alt='Logo HiGroup'/>
-                    <Text color='gray.100' fontSize={'sm'}>Lavanderia 60 minutos</Text>
+                    <Image source={LogoIkli} w={40} h={40} mb={5} alt='Logo HiGroup'/>
+                    <Text color='gray.400' fontSize={'sm'}>Lavanderia 60 minutos</Text>
                 </Center>
 
                 <Center>
-                    <Heading color={'gray.100'} fontSize={'xl'} mb={6} fontFamily={'heading'}>
+                    <Heading color={'gray.400'} fontSize={'xl'} mb={6} fontFamily={'heading'}>
                         Acesse sua conta
                     </Heading>
                 </Center>
@@ -92,7 +92,7 @@ export function SignIn() {
                 <Button title='Acessar' isLoading={isLoading} onPress={handleSubmit(handleLoginAccount)}/>
 
                 <Center mt={12}>
-                    <Text color={'gray.100'} fontSize={'sm'} mb={3} fontFamily={'body'}>
+                    <Text color={'gray.400'} fontSize={'sm'} mb={3} fontFamily={'body'}>
                         Ainda não tenho acesso
                     </Text>
                 </Center>

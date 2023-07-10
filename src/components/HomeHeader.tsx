@@ -9,7 +9,7 @@ export function HomeHeader() {
     const {user, signOut} = useAuth();
 
     return(
-        <HStack bg={"gray.600"} pt={16} pb={5} px={8} alignItems={"center"}>
+        <HStack bg={'colorRp.blueDark'} pt={16} pb={5} px={8} alignItems={"center"}>
             <UserPhoto 
                 source={
                     user.avatar ? {uri: `${api.defaults.baseURL}/avatar/${user.avatar}`} : defaultUserPhotoImg}  

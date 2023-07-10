@@ -8,23 +8,25 @@ type Props = IPressableProps & {
 export function Group({name, isActive, ...rest}: Props) {
     return(
         <Pressable
-            mr={3}
-            w={24}
-            h={10}
-            bg={"gray.600"}
+            mt={2}
+            ml={2}
+            w={32}
+            h={12}
+            bg={"colorRp.blueLight"}
             rounded={"md"}
             justifyContent={"center"}
             alignItems={"center"}
             overflow={"hidden"}
             isPressed={isActive}
             _pressed={{
-                borderColor: 'green.500',
-                borderWidth: 1,
+                background: "colorRp.blueDark",
+                borderColor: 'colorRp.blueLight',
+                borderWidth: 2,
             }}
             {...rest}
         >
             <Text
-                color={"gray.200"}
+                color={"white"}
                 textTransform={"uppercase"}
                 fontSize={"xs"}
                 fontWeight={"bold"}

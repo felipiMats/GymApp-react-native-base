@@ -1,4 +1,5 @@
-import {Image, HStack, Heading, Icon, Text, VStack, ScrollView, Box, useToast, Input, Badge, FlatList} from 'native-base';
+import {Image, HStack, Heading, Icon, Text, VStack, ScrollView, Box, useToast, Badge, FlatList} from 'native-base';
+import { Input } from '@components/Input';
 import { TouchableOpacity } from 'react-native';
 import {Feather} from '@expo/vector-icons'
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
@@ -262,10 +263,10 @@ export function Exercise() {
     );
 
     return(
-        <VStack flex={1}>
-            <VStack bg={'gray.600'} px={8} pt={12}>
+        <VStack flex={1} bg={'colorRp.light'}>
+            <VStack bg={'colorRp.blueDark'} px={8} pt={16}>
                 <TouchableOpacity onPress={handleGoBack}>
-                    <Icon as={Feather} name='arrow-left' color={'green.500'} size={6}/>
+                    <Icon as={Feather} name='arrow-left' color={'colorRp.green'} size={6}/>
                 </TouchableOpacity>
                 
                 <HStack justifyContent={'space-between'} mt={4} mb={8} alignItems={'center'} flexShrink={1}>
@@ -274,14 +275,14 @@ export function Exercise() {
                     <HStack alignItems={'center'}>
                         { isOnlineServer ? <Box bg={'green.700'} size={5} rounded={'full'} /> : <Box bg={'red.700'} size={5} rounded={'full'}/>}
                         <Icon as={MaterialIcons} name='local-laundry-service' size={6} ml={4}/>
-                        <Text color={'gray.200'} ml={1}>{name}</Text>
+                        <Text color={'white'} ml={1}>{name}</Text>
                     </HStack>
                 </HStack>
             </VStack>
 
             { isLoading ? <Loading /> :
                 <ScrollView>
-                    <VStack p={8}>
+                    <VStack >
 
                     <FlatList 
                         data={machines}
@@ -295,43 +296,46 @@ export function Exercise() {
                         )}
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        mb={4}
-                        maxH={10}
-                        minH={10}
+                        mb={-2}
+                        maxH={14}
+                        minH={14}
                     />
 
-                        <Box bg={'gray.600'} rounded={'md'} pb={4} px={4} >
-                            <HStack alignContent={'center'} justifyContent={'space-between'} mb={6} mt={5}>
-                                <HStack>
-                                    <Icon as={FontAwesome5} name='pump-soap' size={6} />
-                                    <Text color={'gray.200'} ml={2}>Sabão {staticSoap}s</Text>
+                        <VStack p={8}>
+                            <Box bg={'gray.600'} rounded={'md'} pb={4} px={4} >
+                                <HStack alignContent={'center'} justifyContent={'space-between'} mb={6} mt={5}>
+                                    <HStack>
+                                        <Icon as={FontAwesome5} name='pump-soap' size={6} />
+                                        <Text color={'gray.200'} ml={2}>Sabão {staticSoap}s</Text>
+                                    </HStack>
+                                    
+                                    <HStack>
+                                        <Icon as={FontAwesome5} name='hand-holding-water' size={6} />
+                                        <Text color={'gray.200'} ml={2}>Amaciante {staticSoftener}s</Text>
+                                    </HStack>
                                 </HStack>
                                 
-                                <HStack>
-                                    <Icon as={FontAwesome5} name='hand-holding-water' size={6} />
-                                    <Text color={'gray.200'} ml={2}>Amaciante {staticSoftener}s</Text>
+                                <Heading textAlign={'center'} color={'gray.200'} fontSize={'22'}>Temporizador</Heading>
+                                
+                                <HStack justifyContent={'space-between'} mt={5}>
+                                    <VStack mt={5} width={'45%'}>
+                                        <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Sabão</Heading>
+                                        <Input textAlign={'center'} h={12} fontSize={24} keyboardType='numeric' mt={4} value={newSoap} onChangeText={setNewSoap}/>
+                                        <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoap}/>
+                                    </VStack>
+
+                                    <VStack mt={5} width={'45%'}>
+                                        <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Amaciante</Heading>
+                                        <Input textAlign={'center'} h={12} fontSize={24} keyboardType='numeric' mt={4} value={newSoftener} onChangeText={setNewSoftener}/>
+                                        <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoftener}/>
+                                    </VStack>
+
                                 </HStack>
-                            </HStack>
-                            
-                            <Heading textAlign={'center'} color={'gray.200'} fontSize={'22'}>Temporizador</Heading>
-                            
-                            <HStack justifyContent={'space-between'} mt={5}>
-                                <VStack mt={5} width={'45%'}>
-                                    <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Sabão</Heading>
-                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} value={newSoap} onChangeText={setNewSoap}/>
-                                    <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoap}/>
-                                </VStack>
-
-                                <VStack mt={5} width={'45%'}>
-                                    <Heading textAlign={'center'} color={'gray.200'} fontSize={'16'}>Amaciante</Heading>
-                                    <Input textAlign={'center'} fontSize={24} color={'white'} keyboardType='numeric' mt={4} value={newSoftener} onChangeText={setNewSoftener}/>
-                                    <Button title='Ligar Rele' isLoading={sendingRegister} mt={4} onPress={handleOnReleSoftener}/>
-                                </VStack>
-
-                            </HStack>
-                            
-                            <Button title='Alterar temporizador' isLoading={sendingRegister} mt={4} onPress={handleNewTimer}/>
-                        </Box>
+                                
+                                <Button title='Alterar temporizador' isLoading={sendingRegister} mt={4} onPress={handleNewTimer}/>
+                            </Box>
+                        </VStack>
+                        
                     
                     </VStack>
                 </ScrollView> 

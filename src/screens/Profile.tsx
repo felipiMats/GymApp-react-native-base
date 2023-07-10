@@ -138,7 +138,7 @@ export function Profile() {
     }
 
     return(
-        <VStack flex={1}>
+        <VStack flex={1} bg={'colorRp.light'}>
             <ScreenHeader title='Perfil'/>
             
             <ScrollView >
@@ -160,7 +160,7 @@ export function Profile() {
                         control={control}
                         name='name'
                         render={({field: {value, onChange}}) => (
-                            <Input value={value} onChangeText={onChange} bg={'gray.600'} placeholder='Nome' errorMessage={errors.name?.message}/>
+                            <Input value={value} onChangeText={onChange} placeholder='Nome' errorMessage={errors.name?.message}/>
                         )}
                     />
                     
@@ -168,20 +168,20 @@ export function Profile() {
                         control={control}
                         name='email'
                         render={({field: {value, onChange}}) => (
-                            <Input bg={'gray.500'} placeholder='E-mail' isDisabled value={value} onChangeText={onChange}/>
+                            <Input bg={'gray.400'} color={'gray.200'} placeholder='E-mail' isDisabled value={value} onChangeText={onChange}/>
                         )}
                     />
                     
                 </Center>
 
                 <VStack px={10} mt={12} mb={9}>
-                    <Heading fontFamily={"heading"} color={'gray.200'} fontSize={'md'} mb={2} mt={2}>Alterar senha</Heading>
+                    <Heading fontFamily={"heading"} color={'gray.600'} fontSize={'md'} mb={2} mt={2}>Alterar senha</Heading>
 
                     <Controller 
                         control={control}
                         name='old_password'
                         render={({field: {onChange}}) => (
-                            <Input bg={'gray.600'} placeholder='Senha antiga' secureTextEntry onChangeText={onChange} errorMessage={errors.old_password?.message}/>
+                            <Input placeholder='Senha antiga' secureTextEntry onChangeText={onChange} errorMessage={errors.old_password?.message}/>
                         )}
                     />
 
@@ -189,7 +189,7 @@ export function Profile() {
                         control={control}
                         name='password'
                         render={({field: {onChange}}) => (
-                            <Input bg={'gray.600'} placeholder='Nova senha' secureTextEntry onChangeText={onChange} errorMessage={errors.password?.message}/>
+                            <Input placeholder='Nova senha' secureTextEntry onChangeText={onChange} errorMessage={errors.password?.message}/>
                         )}
                     />
 
@@ -197,7 +197,7 @@ export function Profile() {
                         control={control}
                         name='confirm_password'
                         render={({field: {onChange}}) => (
-                            <Input bg={'gray.600'} placeholder='Confirme nova senha' secureTextEntry onChangeText={onChange} errorMessage={errors.confirm_password?.message}/>
+                            <Input placeholder='Confirme nova senha' secureTextEntry onChangeText={onChange} errorMessage={errors.confirm_password?.message}/>
 
                         )}
                     />          

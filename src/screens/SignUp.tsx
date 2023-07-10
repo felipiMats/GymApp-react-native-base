@@ -5,8 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import LogoHiGroup from '@assets/GRUPO_HI_LOGO_VETOR_Prancheta_1.png';
-import BackgroundImg from '@assets/background.png';
+import LogoIkli from '@assets/ikli_logo.png';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { AppError } from '@utils/AppError';
@@ -69,16 +68,16 @@ export function SignUp() {
 
     return(
         <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-            <VStack flex={1} px={10} pb={16} bg={'gray.400'}>
+            <VStack flex={1} px={10} pb={16} bg={'colorRp.light'}>
                 {/* <Image source={BackgroundImg} defaultSource={BackgroundImg} alt='Pessoas treinando' resizeMode='contain' position='absolute' /> */}
                 
                 <Center mt={12} mb={12}>
-                    <Image source={LogoHiGroup} w={40} h={40} mb={5} alt='Logo HiGroup'/>
-                    <Text color='gray.100' fontSize={'sm'}>Lavenderia 60 minutos</Text>
+                    <Image source={LogoIkli} w={40} h={40} mb={5} alt='Logo HiGroup'/>
+                    <Text color='gray.400' fontSize={'sm'}>Lavenderia 60 minutos</Text>
                 </Center>
 
                 <Center>
-                    <Heading color={'gray.100'} fontSize={'xl'} mb={6} fontFamily={'heading'}>
+                    <Heading color={'gray.400'} fontSize={'xl'} mb={6} fontFamily={'heading'}>
                         Crie sua conta
                     </Heading>
                 </Center>
@@ -87,7 +86,7 @@ export function SignUp() {
                     control={control}
                     name="name"
                     render={({field: {onChange, value}}) => (
-                        <Input placeholder='Nome' onChangeText={onChange} value={value} errorMessage={errors.name?.message}/>
+                        <Input bg={'white'} placeholder='Nome' onChangeText={onChange} value={value} errorMessage={errors.name?.message}/>
                     )}
                 />
 
@@ -95,7 +94,7 @@ export function SignUp() {
                     control={control}
                     name="email"
                     render={({field: {onChange, value}}) => (
-                        <Input placeholder='E-mail' keyboardType='email-address' autoCapitalize='none' onChangeText={onChange} value={value} errorMessage={errors.email?.message}/>
+                        <Input bg={'white'} placeholder='E-mail' keyboardType='email-address' autoCapitalize='none' onChangeText={onChange} value={value} errorMessage={errors.email?.message}/>
                     )}
                 />
 
@@ -103,7 +102,7 @@ export function SignUp() {
                     control={control}
                     name="password"
                     render={({field: {onChange, value}}) => (
-                        <Input placeholder='Senha' secureTextEntry onChangeText={onChange} value={value} errorMessage={errors.password?.message}/>
+                        <Input bg={'white'} placeholder='Senha' secureTextEntry onChangeText={onChange} value={value} errorMessage={errors.password?.message}/>
                     )}
                 />  
                 
@@ -112,13 +111,13 @@ export function SignUp() {
                     control={control}
                     name="password_confirm"
                     render={({field: {onChange, value}}) => (
-                        <Input placeholder='Confirme sua senha' returnKeyType='send' onSubmitEditing={handleSubmit(handleSignUp)} secureTextEntry onChangeText={onChange} value={value} errorMessage={errors.password_confirm?.message}/>
+                        <Input bg={'white'} placeholder='Confirme sua senha' returnKeyType='send' onSubmitEditing={handleSubmit(handleSignUp)} secureTextEntry onChangeText={onChange} value={value} errorMessage={errors.password_confirm?.message}/>
                     )}
                 />  
 
                 <Button title='Criar e acessar' onPress={handleSubmit(handleSignUp)} isLoading={isLoading} />
 
-                <Button title='Voltar para o login' variant={'outline'} mt={24} onPress={handleGoBack}/>
+                <Button  title='Voltar para o login' variant={'outline'} mt={24} onPress={handleGoBack}/>
             
             </VStack>
         </ScrollView>
